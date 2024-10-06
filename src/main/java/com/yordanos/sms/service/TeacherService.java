@@ -1,12 +1,9 @@
 package com.yordanos.sms.service;
 
-import com.yordanos.sms.dto.StudentDto;
 import com.yordanos.sms.dto.TeacherDto;
 import com.yordanos.sms.exception.ResourceNotFoundException;
 import com.yordanos.sms.model.Image;
-import com.yordanos.sms.model.Student;
 import com.yordanos.sms.model.Teacher;
-import com.yordanos.sms.repository.StudentRepo;
 import com.yordanos.sms.repository.TeacherRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -33,10 +30,10 @@ public class TeacherService {
 
     public Teacher addTeacher(TeacherDto teacherDto) {
         Image image = imageService.saveImage(teacherDto.getImage());
-        return teacherRepo.save(createStudent(teacherDto, image));
+        return teacherRepo.save(createTeacher(teacherDto, image));
     }
 
-    private Teacher createStudent(TeacherDto teacherDto, Image image) {
+    private Teacher createTeacher(TeacherDto teacherDto, Image image) {
         Teacher teacher = new Teacher();
 
         teacher.setId(generateUniqueId());
