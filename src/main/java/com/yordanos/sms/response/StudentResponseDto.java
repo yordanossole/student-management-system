@@ -1,18 +1,19 @@
-package com.yordanos.sms.dto;
+package com.yordanos.sms.response;
 
 import com.yordanos.sms.enums.Gender;
 import com.yordanos.sms.enums.Section;
 import com.yordanos.sms.enums.StudentStatus;
-import com.yordanos.sms.model.Image;
-import jakarta.persistence.*;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Lob;
 import lombok.Data;
-import org.springframework.web.multipart.MultipartFile;
 
 @Data
-public class StudentDto {
+public class StudentResponseDto {
+    private String id;
     private String name;
-    private String fatherName;
-    private String grandFatherName;
+    private String fathersName;
+    private String grandFathersName;
 
     @Enumerated(EnumType.STRING)
     private Gender gender;
@@ -26,5 +27,5 @@ public class StudentDto {
     @Lob
     private String address;
 
-    private MultipartFile image;
+    private Long imageId;
 }

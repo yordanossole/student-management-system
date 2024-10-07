@@ -1,23 +1,14 @@
-package com.yordanos.sms.model;
-
+package com.yordanos.sms.request.student;
 
 import com.yordanos.sms.enums.Gender;
 import com.yordanos.sms.enums.Section;
 import com.yordanos.sms.enums.StudentStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
-@Entity
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-public class Student {
-    @Id
-    private String id;
+@Data
+public class AddStudentRequest {
     private String name;
     private String fathersName;
     private String grandFathersName;
@@ -34,7 +25,5 @@ public class Student {
     @Lob
     private String address;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "image_id", referencedColumnName = "id")
-    private Image image;
+    private MultipartFile image;
 }

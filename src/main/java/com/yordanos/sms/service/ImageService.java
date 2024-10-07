@@ -16,7 +16,7 @@ import java.sql.SQLException;
 public class ImageService {
     private final ImageRepo imageRepo;
 
-    public Image getImageById(int id) throws ResourceNotFoundException {
+    public Image getImageById(Long id) throws ResourceNotFoundException {
         return imageRepo.findById(id)
                 .orElseThrow(()-> new ResourceNotFoundException("Image with id " + id + " not found"));
     }
@@ -33,20 +33,20 @@ public class ImageService {
         return imageRepo.save(image);
     }
 
-    public void deleteImage(int id) throws ResourceNotFoundException {
+    public void deleteImage(Long id) throws ResourceNotFoundException {
         imageRepo.findById(id)
                 .ifPresentOrElse(imageRepo::delete, ()-> {
                     throw new ResourceNotFoundException("Image with id " + id + " not found");
                 });
     }
 
-    public void updateImage(MultipartFile file, int id) {
+    public Image updateImage(MultipartFile file, Long id) {
         Image image = getImageById(id);
         try {
             image.setFilename(file.getOriginalFilename());
             image.setFileType(file.getContentType());
             image.setImageFile(new SerialBlob(file.getBytes()));
-            imageRepo.save(image);
+            return imageRepo.save(image);
         } catch (IOException | SQLException e) {
             throw new RuntimeException(e.getMessage());
         }

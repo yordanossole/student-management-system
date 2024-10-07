@@ -1,10 +1,15 @@
 package com.yordanos.sms.service;
 
-import com.yordanos.sms.dto.TeacherDto;
+import com.yordanos.sms.model.Student;
+import com.yordanos.sms.request.student.UpdateStudentRequest;
+import com.yordanos.sms.request.teacher.AddTeacherRequest;
 import com.yordanos.sms.exception.ResourceNotFoundException;
 import com.yordanos.sms.model.Image;
 import com.yordanos.sms.model.Teacher;
 import com.yordanos.sms.repository.TeacherRepo;
+import com.yordanos.sms.request.teacher.UpdateTeacherRequest;
+import com.yordanos.sms.response.StudentResponseDto;
+import com.yordanos.sms.response.TeacherResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -28,31 +33,49 @@ public class TeacherService {
         return generatedId;
     }
 
-    public Teacher addTeacher(TeacherDto teacherDto) {
-        Image image = imageService.saveImage(teacherDto.getImage());
-        return teacherRepo.save(createTeacher(teacherDto, image));
+    public Teacher addTeacher(AddTeacherRequest addTeacherRequest) {
+        Image image = imageService.saveImage(addTeacherRequest.getImage());
+        return teacherRepo.save(createTeacher(addTeacherRequest, image));
     }
 
-    private Teacher createTeacher(TeacherDto teacherDto, Image image) {
+    private Teacher createTeacher(AddTeacherRequest addTeacherRequest, Image image) {
         Teacher teacher = new Teacher();
 
         teacher.setId(generateUniqueId());
-        teacher.setName(teacherDto.getName());
-        teacher.setFatherName(teacherDto.getFatherName());
-        teacher.setGrandFatherName(teacherDto.getGrandFatherName());
-        teacher.setGender(teacherDto.getGender());
-        teacher.setStatus(teacherDto.getStatus());
-        teacher.setAddress(teacherDto.getAddress());
+        teacher.setName(addTeacherRequest.getName());
+        teacher.setFatherName(addTeacherRequest.getFatherName());
+        teacher.setGrandFatherName(addTeacherRequest.getGrandFatherName());
+        teacher.setGender(addTeacherRequest.getGender());
+        teacher.setStatus(addTeacherRequest.getStatus());
+        teacher.setAddress(addTeacherRequest.getAddress());
         teacher.setImage(image);
 
         return teacher;
     }
-    public Teacher updateTeacher(Teacher teacher) {
-        return teacherRepo.save(teacher);
+
+    public Teacher updateTeacher(UpdateTeacherRequest updateTeacherRequest) {
+        Image image = imageService.updateImage(updateTeacherRequest.getImageFile(), updateTeacherRequest.getImageId());
+        return teacherRepo.save(updateExistingTeacher(updateTeacherRequest, image));
     }
 
-    public void deleteTeacher(Teacher teacher) {
-        teacherRepo.delete(teacher);
+    private Teacher updateExistingTeacher(UpdateTeacherRequest updateTeacherRequest, Image image) {
+        Teacher teacher = new Teacher();
+
+        teacher.setId(updateTeacherRequest.getId());
+        teacher.setName(updateTeacherRequest.getName());
+        teacher.setFatherName(updateTeacherRequest.getFatherName());
+        teacher.setGrandFatherName(updateTeacherRequest.getGrandFatherName());
+        teacher.setGender(updateTeacherRequest.getGender());
+        teacher.setStatus(updateTeacherRequest.getStatus());
+        teacher.setAddress(updateTeacherRequest.getAddress());
+        teacher.setImage(image);
+        return teacher;
+    }
+
+    public void deleteTeacher(TeacherResponseDto teacherResponseDto) {
+        teacherRepo.findById(teacherResponseDto.getId())
+                .ifPresentOrElse(teacherRepo::delete,
+                        () -> new ResourceNotFoundException("Teacher not found"));
     }
 
     public List<Teacher> getAllTeachers() {
@@ -69,5 +92,23 @@ public class TeacherService {
 
     public Long countTeachers() {
         return teacherRepo.count();
+    }
+
+    public TeacherResponseDto convertToResponseDto(Teacher teacher) {
+        TeacherResponseDto teacherResponseDto = new TeacherResponseDto();
+
+        teacherResponseDto.setId(teacher.getId());
+        teacherResponseDto.setName(teacher.getName());
+        teacherResponseDto.setFatherName(teacher.getFatherName());
+        teacherResponseDto.setGrandFatherName(teacher.getGrandFatherName());
+        teacherResponseDto.setGender(teacher.getGender());
+        teacherResponseDto.setStatus(teacher.getStatus());
+        teacherResponseDto.setAddress(teacher.getAddress());
+        teacherResponseDto.setImageId(teacher.getImage().getId());
+        return teacherResponseDto;
+    }
+
+    public List<TeacherResponseDto> convertToListOfResponseDto(List<Teacher> teachers) {
+        return teachers.stream().map(this::convertToResponseDto).toList();
     }
 }
