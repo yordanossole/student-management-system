@@ -38,8 +38,13 @@ public class StudentController {
 
     @PutMapping("/student/update")
     public ResponseEntity<ApiResponse> updateStudent(@ModelAttribute UpdateStudentRequest updateStudentRequest) {
-        Student updatedStudent = studentService.updateStudent(updateStudentRequest);
-        return ResponseEntity.ok(new ApiResponse("Updated Successfully", updatedStudent));
+        try {
+            Student updatedStudent = studentService.updateStudent(updateStudentRequest);
+            StudentResponseDto studentResponseDto = studentService.convertToResponseDto(updatedStudent);
+            return ResponseEntity.ok(new ApiResponse("Updated Successfully", studentResponseDto));
+        } catch (Exception e) {
+            return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse(e.getMessage(), null));
+        }
     }
 
     @GetMapping("/all")

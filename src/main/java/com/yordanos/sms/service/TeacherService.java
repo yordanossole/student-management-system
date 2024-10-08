@@ -1,14 +1,11 @@
 package com.yordanos.sms.service;
 
-import com.yordanos.sms.model.Student;
-import com.yordanos.sms.request.student.UpdateStudentRequest;
 import com.yordanos.sms.request.teacher.AddTeacherRequest;
 import com.yordanos.sms.exception.ResourceNotFoundException;
 import com.yordanos.sms.model.Image;
 import com.yordanos.sms.model.Teacher;
 import com.yordanos.sms.repository.TeacherRepo;
 import com.yordanos.sms.request.teacher.UpdateTeacherRequest;
-import com.yordanos.sms.response.StudentResponseDto;
 import com.yordanos.sms.response.TeacherResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -34,7 +31,7 @@ public class TeacherService {
     }
 
     public Teacher addTeacher(AddTeacherRequest addTeacherRequest) {
-        Image image = imageService.saveImage(addTeacherRequest.getImage());
+        Image image = imageService.saveImage(addTeacherRequest.getImageFile());
         return teacherRepo.save(createTeacher(addTeacherRequest, image));
     }
 
@@ -63,8 +60,8 @@ public class TeacherService {
 
         teacher.setId(updateTeacherRequest.getId());
         teacher.setName(updateTeacherRequest.getName());
-        teacher.setFatherName(updateTeacherRequest.getFatherName());
-        teacher.setGrandFatherName(updateTeacherRequest.getGrandFatherName());
+        teacher.setFatherName(updateTeacherRequest.getFathersName());
+        teacher.setGrandFatherName(updateTeacherRequest.getGrandFathersName());
         teacher.setGender(updateTeacherRequest.getGender());
         teacher.setStatus(updateTeacherRequest.getStatus());
         teacher.setAddress(updateTeacherRequest.getAddress());

@@ -6,7 +6,6 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Lob;
 import lombok.Data;
-import org.springframework.web.multipart.MultipartFile;
 
 @Data
 public class TeacherResponseDto {

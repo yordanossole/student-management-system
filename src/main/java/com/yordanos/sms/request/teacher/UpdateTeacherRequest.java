@@ -12,8 +12,8 @@ import org.springframework.web.multipart.MultipartFile;
 public class UpdateTeacherRequest {
     private String id;
     private String name;
-    private String fatherName;
-    private String grandFatherName;
+    private String fathersName;
+    private String grandFathersName;
 
     @Enumerated(EnumType.STRING)
     private Gender gender;

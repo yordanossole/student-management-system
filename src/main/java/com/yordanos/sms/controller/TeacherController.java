@@ -37,8 +37,13 @@ public class TeacherController {
 
     @PutMapping("/teacher/update")
     public ResponseEntity<ApiResponse> updateTeacher(@ModelAttribute UpdateTeacherRequest updateTeacherRequest) {
-        Teacher updatedTeacher = teacherService.updateTeacher(updateTeacherRequest);
-        return ResponseEntity.ok(new ApiResponse("Updated Successfully", updatedTeacher));
+        try {
+            Teacher updatedTeacher = teacherService.updateTeacher(updateTeacherRequest);
+            TeacherResponseDto teacherResponseDto = teacherService.convertToResponseDto(updatedTeacher);
+            return ResponseEntity.ok(new ApiResponse("Updated Successfully", teacherResponseDto));
+        } catch (Exception e) {
+            return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse(e.getMessage(), null));
+        }
     }
 
     @GetMapping("/all")
@@ -48,7 +53,7 @@ public class TeacherController {
         return ResponseEntity.ok(new ApiResponse("Success", teacherResponseDtos));
     }
 
-    @DeleteMapping("/teacher")
+    @DeleteMapping("/teacher/delete")
     public ResponseEntity<ApiResponse> deleteTeacher(@RequestBody TeacherResponseDto teacherResponseDto) {
         try {
             teacherService.deleteTeacher(teacherResponseDto);

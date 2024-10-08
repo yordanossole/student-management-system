@@ -25,5 +25,5 @@ public class AddStudentRequest {
     @Lob
     private String address;
 
-    private MultipartFile image;
+    private MultipartFile imageFile;
 }

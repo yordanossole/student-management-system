@@ -20,5 +20,5 @@ public class AddTeacherRequest {
     @Lob
     private String address;
 
-    private MultipartFile image;
+    private MultipartFile imageFile;
 }

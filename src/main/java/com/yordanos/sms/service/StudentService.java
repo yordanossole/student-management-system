@@ -33,7 +33,7 @@ public class StudentService {
     }
 
     public Student addStudent(AddStudentRequest addStudentRequest) {
-        Image image = imageService.saveImage(addStudentRequest.getImage());
+        Image image = imageService.saveImage(addStudentRequest.getImageFile());
         return studentRepo.save(createStudent(addStudentRequest, image));
     }
 
